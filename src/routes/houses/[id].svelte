@@ -12,8 +12,24 @@
 </script>
 
 <script>
+  import DateRangePicker from './_DateRangePicker.svelte';
+
   export let house;
 </script>
+
+<style>
+  .container {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    grid-gap: 30px;
+  }
+
+  aside {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-top: 20px;
+  }
+</style>
 
 <svelte:head>
   <title>{house.title}</title>
@@ -23,6 +39,7 @@
   <header>
     <img src="{house.picture}" width="100%" alt="">
   </header>
+
   <div class="container">
     <main>
       <h1>{house.title}</h1>
@@ -37,7 +54,7 @@
 
       <p>{@html house.description}</p>
 
-      <a href="#">Contact Host</a>
+      <button>Contact Host</button>
 
       <hr />
 
@@ -63,5 +80,10 @@
         <p>{review.comment}</p>
       {/each}
     </main>
+
+    <aside>
+      <h2>Add dates for prices</h2>
+      <DateRangePicker />
+    </aside>
   </div>
 </div>
