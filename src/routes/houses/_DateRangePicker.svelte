@@ -1,8 +1,11 @@
 <script>
+  import { createEventDispatcher } from 'svelte';
   import Datepicker from '../../lib/svelte-calendar-1.0.10/src/Components/Datepicker.svelte';
   import * as dateUtil from '../../util/date';
 
   const dateFormat = '#{l}, #{F} #{j}, #{Y}';
+
+  const dispatch = createEventDispatcher();
 
   const startDateSelectableCallback = date => {
     return true;
@@ -37,6 +40,20 @@
     if (!dateUtil.firstDatePrecedesSecond(startDate, endDate)) {
       endDate = dateUtil.getDefaultEndDate(startDate);
     }
+
+    dispatch('datesChanged', {
+      startDate,
+      endDate
+    });
+  };
+
+  const selectEndDate = e => {
+    endDate = new Date(e.detail.date);
+
+    dispatch('datesChanged', {
+      startDate,
+      endDate
+    });
   };
 
   let startDate = new Date();
@@ -69,7 +86,7 @@
     format='{dateFormat}'
     start={new Date()}
     selectableCallback={endDateSelectableCallback}
-    on:dateSelected={e => { endDate = new Date(e.detail.date) }}>
+    on:dateSelected={selectEndDate}>
     <div class="check-in">
       {`${endDate.getDate()} ${endDate.toLocaleString('default', { month: 'long' })}`}
     </div>
