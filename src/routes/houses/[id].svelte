@@ -13,8 +13,21 @@
 
 <script>
   import DateRangePicker from './_DateRangePicker.svelte';
+  import { getNightsBetweenDates } from '../../util/date';
 
   export let house;
+
+  let startDate;
+  let endDate;
+  let dateChosen = false;
+  let numNightsBetweenDates = 0;
+
+  const changeDates = e => {
+    startDate = e.detail.startDate;
+    endDate = e.detail.endDate;
+    numNightsBetweenDates = getNightsBetweenDates(startDate, endDate);
+    dateChosen = true;
+  };
 </script>
 
 <style>
@@ -83,7 +96,15 @@
 
     <aside>
       <h2>Add dates for prices</h2>
-      <DateRangePicker />
+      <DateRangePicker on:datesChanged={changeDates}/>
+
+      {#if dateChosen}
+        <br>
+        <h2>Price for Stay</h2>
+        <p>{house.price} x {numNightsBetweenDates}</p>
+        <p><strong>Total</strong> ${house.price * numNightsBetweenDates}</p>
+        <button class="reserve">Reserve</button>
+      {/if}
     </aside>
   </div>
 </div>
