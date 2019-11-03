@@ -1,5 +1,34 @@
 <script>
+	import { showModal, showLoginModal, showRegistrationModal } from '../store';
+
 	export let segment;
+
+	const navItems = [
+		{
+			text: 'Become a Host',
+			href: 'become-a-host',
+			class: segment === undefined ? "selected" : "",
+			onClick: () => {}
+		}, {
+			text: 'Sign Up',
+			href: 'javascript:;',
+			class: segment === "register" ? "selected" : "",
+			onClick: () => {
+				showModal.set(true);
+				showLoginModal.set(false);
+				showRegistrationModal.set(true);
+			}
+		}, {
+			text: 'Log In',
+			href: 'javascript:;',
+			class: segment === "login" ? "selected" : "",
+			onClick: () => {
+				showModal.set(true);
+				showLoginModal.set(true);
+				showRegistrationModal.set(false);
+			}
+		}
+	];
 </script>
 
 <style>
@@ -69,13 +98,15 @@
 
 <div class="nav-container">
 	<div class="logo">
-		<a href="/"><img src="/img/logo.png" alt=""></a>
+		<a href="/"><img src="/img/logo.png" alt="Logo"></a>
 	</div>
 	<nav>
 		<ul>
-			<li><a class='{segment === undefined ? "selected" : ""}' href='become-a-host'>Become a Host</a></li>
-			<li><a class='{segment === "register" ? "selected" : ""}' href='register'>Sign Up</a></li>
-			<li><a class='{segment === "login" ? "selected" : ""}' href='login'>Log In</a></li>
+			{#each navItems as item}
+				<li>
+					<a class={item.class} href={item.href} on:click={item.onClick}>{item.text}</a>
+				</li>
+			{/each}
 		</ul>
 	</nav>
 </div>

@@ -14,6 +14,7 @@
 <script>
   import DateRangePicker from './_DateRangePicker.svelte';
   import { getNightsBetweenDates } from '../../util/date';
+  import { showModal, showLoginModal } from '../../store';
 
   export let house;
 
@@ -27,6 +28,11 @@
     endDate = e.detail.endDate;
     numNightsBetweenDates = getNightsBetweenDates(startDate, endDate);
     dateChosen = true;
+  };
+
+  const onReserveClick = () => {
+    showModal.set(true);
+    showLoginModal.set(true);
   };
 </script>
 
@@ -103,7 +109,7 @@
         <h2>Price for Stay</h2>
         <p>{house.price} x {numNightsBetweenDates}</p>
         <p><strong>Total</strong> ${house.price * numNightsBetweenDates}</p>
-        <button class="reserve">Reserve</button>
+        <button class="button" on:click={onReserveClick}>Reserve</button>
       {/if}
     </aside>
   </div>

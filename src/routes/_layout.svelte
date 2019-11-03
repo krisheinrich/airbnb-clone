@@ -1,7 +1,21 @@
 <script>
 	import Nav from '../components/Nav.svelte';
+	import Modal from '../components/Modal.svelte';
+	import RegistrationModal from '../components/RegistrationModal.svelte';
+	import LoginModal from '../components/LoginModal.svelte';
+	import { showModal, showLoginModal, showRegistrationModal } from '../store';
 
 	export let segment;
+
+	const showSignup = () => {
+		showLoginModal.set(false);
+		showRegistrationModal.set(true);
+	};
+
+	const showLogin = () => {
+		showRegistrationModal.set(false);
+		showLoginModal.set(true);
+	};
 </script>
 
 <style>
@@ -20,3 +34,14 @@
 <main>
 	<slot></slot>
 </main>
+
+{#if $showModal}
+	<Modal on:close={() => showModal.set(false)}>
+		{#if $showLoginModal}
+			<LoginModal on:showSignup={showSignup}/>
+		{/if}
+		{#if $showRegistrationModal}
+			<RegistrationModal on:showLogin={showLogin}/>
+		{/if}
+	</Modal>
+{/if}
