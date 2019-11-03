@@ -1,11 +1,11 @@
 
-export const getDefaultEndDate = date => {
-  return new Date(date.getTime() + 24 * 3600 * 1000);  // 1 day after input
-};
+export const getDefaultEndDate = date => (
+  new Date(date.getTime() + 24 * 3600 * 1000)  // 1 day after input
+);
 
-export const firstDatePrecedesSecond = (firstDate, secondDate) => {
-  return firstDate.setHours(0,0,0,0) < secondDate.setHours(0,0,0,0);
-};
+export const firstDatePrecedesSecond = (firstDate, secondDate) => (
+  firstDate.setHours(0,0,0,0) < secondDate.setHours(0,0,0,0)
+);
 
 export const isSameDate = (firstDate, secondDate) => (
   firstDate.getFullYear() === secondDate.getFullYear() &&
