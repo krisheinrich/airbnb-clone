@@ -16,6 +16,12 @@
 		showRegistrationModal.set(false);
 		showLoginModal.set(true);
 	};
+
+	const closeModal = () => {
+		showRegistrationModal.set(false);
+		showLoginModal.set(false);
+		showModal.set(false);
+	};
 </script>
 
 <style>
@@ -38,10 +44,10 @@
 {#if $showModal}
 	<Modal on:close={() => showModal.set(false)}>
 		{#if $showLoginModal}
-			<LoginModal on:showSignup={showSignup}/>
+			<LoginModal on:showSignup={showSignup} on:closeModal={closeModal}/>
 		{/if}
 		{#if $showRegistrationModal}
-			<RegistrationModal on:showLogin={showLogin}/>
+			<RegistrationModal on:showLogin={showLogin} on:closeModal={closeModal}/>
 		{/if}
 	</Modal>
 {/if}
