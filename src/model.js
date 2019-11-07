@@ -2,7 +2,7 @@ import { Sequelize, Model, DataTypes } from 'sequelize';
 import bcrypt from 'bcrypt';
 import { user, password, host, database } from './database.js';
 
-const sequelize = new Sequelize(database, user, password, {
+export const sequelize = new Sequelize(database, user, password, {
   host,
   dialect: 'postgres',
   logging: false
