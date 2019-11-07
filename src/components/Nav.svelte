@@ -1,5 +1,9 @@
 <script>
+	import axios from 'axios';
+	import { stores } from '@sapper/app';
 	import { showModal, showLoginModal, showRegistrationModal } from '../store';
+
+	const { session } = stores();
 
 	export let segment;
 
@@ -29,6 +33,11 @@
 			}
 		}
 	];
+
+	const onLogOut = async () => {
+		await axios.post('auth/logout');
+		session.set({ user: null });
+	};
 </script>
 
 <style>
@@ -74,6 +83,10 @@
 		float: left;
 	}
 
+	.username {
+		padding: 1em 0.5em;
+	}
+
 	.selected {
 		position: relative;
 		display: inline-block;
@@ -102,11 +115,18 @@
 	</div>
 	<nav>
 		<ul>
-			{#each navItems as item}
+			{#if $session.user}
+				<li class="username">{$session.user}</li>
 				<li>
-					<a class={item.class} href={item.href} on:click={item.onClick}>{item.text}</a>
+					<a href="javascript:" on:click={onLogOut}>Log Out</a>
 				</li>
-			{/each}
+			{:else}
+				{#each navItems as item}
+					<li>
+						<a class={item.class} href={item.href} on:click={item.onClick}>{item.text}</a>
+					</li>
+				{/each}
+			{/if}
 		</ul>
 	</nav>
 </div>
