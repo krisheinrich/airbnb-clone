@@ -14,6 +14,7 @@
     <img src="{picture}" width="100%" alt="">
     <p>{type} - {town}</p>
     <p>{title}</p>
-    <p>{rating} ({reviewsCount}) {superhost ? '- Superhose' : ''}</p>
+    <!-- TO DO: Add reviewsCount and average rating to each listing -->
+    <p>{rating} ({reviewsCount}) {superhost ? '- Superhost' : ''}</p>
   </a>
 </div>
