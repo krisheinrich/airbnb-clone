@@ -6,12 +6,21 @@ import bodyParser from 'body-parser';
 import session from 'express-session';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { User, sequelize } from './model';
+import { sequelize } from './database';
+import User from './models/user';
+import House from './models/house';
+import Review from './models/review';
 
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
+
+// Sync models with Sequelize
+
+User.sync({ alter: true });
+House.sync({ alter: true });
+Review.sync({ alter: true });
 
 // Configure session middleware
 
@@ -65,7 +74,7 @@ passport.deserializeUser((email, done) => {
 	});
 });
 
-// Apply middleware and start application server
+// Register middleware and start application server
 
 polka() // You can also use Express
 	.use(
