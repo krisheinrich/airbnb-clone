@@ -10,6 +10,7 @@ import { sequelize } from './database';
 import User from './models/user';
 import House from './models/house';
 import Review from './models/review';
+import Booking from './models/booking';
 
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
@@ -21,6 +22,7 @@ const dev = NODE_ENV === 'development';
 User.sync({ alter: true });
 House.sync({ alter: true });
 Review.sync({ alter: true });
+Booking.sync({ alter: true });
 
 // Configure session middleware
 
