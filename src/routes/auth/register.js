@@ -1,7 +1,7 @@
-import { User } from '../../model.js';
+import User from '../../models/user';
 
 export const post = async (req, res) => {
-  const { email, password, passwordConfirmation } = req.body;
+  const { email, password, passwordConfirmation, firstName, lastName } = req.body;
 
   if (password !== passwordConfirmation) {
     res.statusCode = 500;
@@ -9,8 +9,14 @@ export const post = async (req, res) => {
     return;
   }
 
+  if (!firstName || !lastName) {
+    res.statusCode = 500;
+    res.end(JSON.stringify({ status: 'error', message: 'First and last names are required for registration' }));
+    return;
+  }
+
   try {
-    const user = await User.create({ email, password });
+    const user = await User.create({ email, password, firstName, lastName });
 
     req.login(user, err => {
       if (err) {

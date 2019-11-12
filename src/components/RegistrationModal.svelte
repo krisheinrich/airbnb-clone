@@ -10,10 +10,13 @@
   let email = '';
   let password = '';
   let passwordConfirmation = '';
+  let firstName = '';
+  let lastName = '';
   
   const onSubmit = async () => {
     try {
-      const response = await axios.post('auth/register', { email, password, passwordConfirmation });
+      const body = { email, password, passwordConfirmation, firstName, lastName };
+      const response = await axios.post('auth/register', body);
       if (response.data.status === 'error') {
         alert(response.data.message);
         return;
@@ -31,6 +34,8 @@
 <h2>Sign Up</h2>
 <div>
   <form on:submit|preventDefault={onSubmit}>
+    <input type="text" bind:value={firstName} placeholder="First Name"/>
+    <input type="text" bind:value={lastName} placeholder="Last Name"/>
     <input type="email" bind:value={email} placeholder="Email address"/>
     <input type="password" bind:value={password} placeholder="Password"/>
     <input type="password" bind:value={passwordConfirmation} placeholder="Enter password again"/>
