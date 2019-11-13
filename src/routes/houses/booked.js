@@ -1,16 +1,6 @@
 import { Op } from 'sequelize';
 import Booking from '../../models/booking';
-
-const getDatesBetweenDates = (startDate, endDate) => {
-  let dates = [];
-  // add all dates booked, from start until end
-  while (startDate < endDate) {
-    dates.push(new Date(startDate));
-    startDate.setDate(startDate.getDate() + 1);
-  }
-  dates.push(endDate);
-  return dates;
-};
+import { getDatesBetweenDates } from '../../util/date';
 
 export const post = async (req, res, next) => {
   const { houseId } = req.body;
@@ -27,6 +17,7 @@ export const post = async (req, res, next) => {
   let bookedDates = [];
 
   for (const booking of results) {
+    // add all dates booked, from start until end
     const dates = getDatesBetweenDates(new Date(booking.startDate), new Date(booking.endDate));
     bookedDates.push(...dates);
   }

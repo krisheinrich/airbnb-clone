@@ -14,8 +14,9 @@ export const isSameDate = (firstDate, secondDate) => (
 );
 
 export const getNightsBetweenDates = (startDate, endDate) => {
-  const start = new Date(startDate); // clone
-  const end = new Date(endDate); // clone
+  // clone to avoid mutating arguments
+  const start = new Date(startDate);
+  const end = new Date(endDate);
 
   let dayCount = 0;
   while (end > start) {
@@ -24,4 +25,14 @@ export const getNightsBetweenDates = (startDate, endDate) => {
   }
 
   return dayCount;
+};
+
+export const getDatesBetweenDates = (startDate, endDate) => {
+  let dates = [];
+  while (startDate < endDate) {
+    dates.push(new Date(startDate));
+    startDate.setDate(startDate.getDate() + 1);
+  }
+  dates.push(endDate);
+  return dates;
 };
