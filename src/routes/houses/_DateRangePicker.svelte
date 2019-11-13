@@ -3,15 +3,33 @@
   import Datepicker from '../../lib/svelte-calendar-1.0.10/src/Components/Datepicker.svelte';
   import * as dateUtil from '../../util/date';
 
+  export let bookedDates;
+  export let togglePicker;
+
   const dateFormat = '#{l}, #{F} #{j}, #{Y}';
 
   const dispatch = createEventDispatcher();
 
-  const startDateSelectableCallback = date => {
+  const dateIsSelectable = date => {
+    if (!bookedDates) {
+      return true;
+    }
+
+    for (const bookedDate of bookedDates) {
+      if (dateUtil.isSameDate(date, new Date(bookedDate))) {
+        return false;
+      }
+    }
     return true;
   };
 
+  let startDateSelectableCallback = date => dateIsSelectable(date);
+
   let endDateSelectableCallback = date => {
+    if (!dateIsSelectable(date)) {
+      return false;
+    }
+
     const today = new Date();
 
     // restrict dates in the past
@@ -59,7 +77,11 @@
   let startDate = new Date();
   let endDate = dateUtil.getDefaultEndDate(startDate);
 
-  export let togglePicker;
+  $: {
+    bookedDates
+    startDateSelectableCallback = startDateSelectableCallback
+    endDateSelectableCallback = endDateSelectableCallback
+  }
 </script>
 
 <style>

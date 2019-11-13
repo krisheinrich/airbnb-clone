@@ -17,6 +17,7 @@
   import { showModal, showLoginModal } from '../../store';
   import axios from 'axios';
   import { stores } from '@sapper/app';
+  import { onMount } from 'svelte';
 
   const { session } = stores();
 
@@ -26,6 +27,11 @@
   let endDate;
   let dateChosen = false;
   let numNightsBetweenDates = 0;
+  let bookedDates = null;
+
+  onMount(async () => {
+    bookedDates = await getBookedDates();
+  });
 
   const changeDates = e => {
     startDate = e.detail.startDate;
@@ -39,8 +45,49 @@
     showLoginModal.set(true);
   };
 
+  const getBookedDates = async () => {
+    try {
+      const houseId = house.id;
+      const response = await axios.post('/houses/booked', { houseId });
+      if (response.data.status === 'error') {
+        // TO DO: replace with toast
+        alert(response.data.message);
+        return;
+      }
+      return response.data.dates;
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+  };
+
+  const canReserve = async () => {
+    try {
+      const houseId = house.id;
+      const response = await axios.post('houses/check', { houseId, startDate, endDate });
+      if (response.data.status === 'error') {
+        alert(response.data.messge);
+        return;
+      }
+
+      if (response.data.message === 'busy') {
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+  };
+
   const reserve = async () => {
     try {
+      if (!await canReserve()) {
+        alert('The dates chosen are not valid');
+        return;
+      }
+
       const houseId = house.id;
       const response = await axios.post('houses/reserve', { houseId, startDate, endDate });
       if (response.data.status === 'error') {
@@ -124,7 +171,7 @@
 
     <aside>
       <h2>Add dates for prices</h2>
-      <DateRangePicker on:datesChanged={changeDates}/>
+      <DateRangePicker on:datesChanged={changeDates} {bookedDates}/>
 
       {#if dateChosen}
         <br>
