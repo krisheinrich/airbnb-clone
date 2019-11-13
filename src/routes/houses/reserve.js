@@ -2,10 +2,8 @@ import User from '../../models/user';
 import Booking from '../../models/booking';
 
 export const post = async (req, res, next) => {
-
   try {
     const userEmail = req.session.passport.user;
-    console.log("User email =", userEmail);
     const user = await User.findOne({ where: { email: userEmail } });
 
     await Booking.create({
