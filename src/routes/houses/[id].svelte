@@ -15,6 +15,10 @@
   import DateRangePicker from './_DateRangePicker.svelte';
   import { getNightsBetweenDates } from '../../util/date';
   import { showModal, showLoginModal } from '../../store';
+  import axios from 'axios';
+  import { stores } from '@sapper/app';
+
+  const { session } = stores();
 
   export let house;
 
@@ -30,9 +34,25 @@
     dateChosen = true;
   };
 
-  const onReserveClick = () => {
+  const promptLogin = () => {
     showModal.set(true);
     showLoginModal.set(true);
+  };
+
+  const reserve = async () => {
+    try {
+      const houseId = house.id;
+      const response = await axios.post('houses/reserve', { houseId, startDate, endDate });
+      if (response.data.status === 'error') {
+        // TO DO: Replace alert() calls with toasts
+        alert(response.data.message);
+        return;
+      }
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+      return;
+    }
   };
 </script>
 
@@ -109,9 +129,14 @@
       {#if dateChosen}
         <br>
         <h2>Price for Stay</h2>
-        <p>{house.price} x {numNightsBetweenDates}</p>
+        <p>{house.price} x {numNightsBetweenDates} {numNightsBetweenDates === 1 ? 'night' : 'nights'}</p>
         <p><strong>Total</strong> ${house.price * numNightsBetweenDates}</p>
-        <button class="button" on:click={onReserveClick}>Reserve</button>
+
+        {#if $session.user}
+          <button class="button" on:click={reserve}>Reserve</button>
+        {:else}
+          <button class="button" on:click={promptLogin}>Login to Reserve</button>
+        {/if}
       {/if}
     </aside>
   </div>
