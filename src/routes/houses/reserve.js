@@ -5,12 +5,14 @@ export const post = async (req, res, next) => {
   try {
     const userEmail = req.session.passport.user;
     const user = await User.findOne({ where: { email: userEmail } });
+    const { houseId, startDate, endDate, sessionId } = req.body;
 
     await Booking.create({
-      houseId: req.body.houseId,
+      houseId,
       userId: user.id,
-      startDate: req.body.startDate,
-      endDate: req.body.endDate,
+      startDate,
+      endDate,
+      sessionId
     });
 
     res.writeHead(200, {
