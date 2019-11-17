@@ -81,7 +81,11 @@ passport.deserializeUser((email, done) => {
 polka() // You can also use Express
 	.use(
 		session(sessionConfig),
-		bodyParser.json(),
+		bodyParser.json({
+			verify: (req, res, buf) => {  // make rawBody available
+				req.rawBody = buf;
+			}
+		}),
 		passport.initialize(),
 		passport.session(),
 		compression({ threshold: 0 }),
