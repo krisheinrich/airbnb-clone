@@ -83,19 +83,34 @@
 
   const reserve = async () => {
     try {
+      // validate selected date range
       if (!await canReserve()) {
         alert('The dates chosen are not valid');
         return;
       }
 
-      const houseId = house.id;
-      const response = await axios.post('houses/reserve', { houseId, startDate, endDate });
-      if (response.data.status === 'error') {
+      // create a checkout session with Stripe
+      const postBody = { amount: house.price * numNightsBetweenDates };
+      const sessionResponse = await axios.post('stripe/session', postBody);
+      if (sessionResponse.data.status === 'error') {
         // TO DO: Replace alert() calls with toasts
-        alert(response.data.message);
+        alert(sessionResponse.data.message);
         return;
       }
-      console.log(response.data);
+
+      const { sessionId, stripePublicKey } = sessionResponse.data;
+
+      // request reservation with payment sessionId
+      const houseId = house.id;
+      const reserveResponse = await axios.post('houses/reserve', { houseId, startDate, endDate, sessionId });
+      if (reserveResponse.data.status === 'error') {
+        // TO DO: Replace alert() calls with toasts
+        alert(reserveResponse.data.message);
+        return;
+      }
+
+      const stripe = Stripe(stripePublicKey);
+      const { error } = await stripe.redirectToCheckout({ sessionId });
     } catch (error) {
       console.error(error);
       return;
