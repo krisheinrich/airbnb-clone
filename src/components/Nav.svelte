@@ -117,6 +117,7 @@
 		<ul>
 			{#if $session.user}
 				<li class="username">{$session.user}</li>
+				<li><a href="/bookings">Bookings</a></li>
 				<li>
 					<a href="javascript:" on:click={onLogOut}>Log Out</a>
 				</li>
